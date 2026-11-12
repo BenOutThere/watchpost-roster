@@ -1,0 +1,4 @@
+CREATE POLICY "guard reads own slot changes" ON public.roster_change_log FOR SELECT TO authenticated USING (EXISTS (SELECT 1 FROM public.roster_slots s WHERE s.id = slot_id AND public.guard_owns_guard(s.assigned_guard_id)));
+CREATE POLICY "manage guards for roster managers" ON public.guards FOR ALL TO authenticated USING (public.is_roster_manager(auth.uid())) WITH CHECK (public.is_roster_manager(auth.uid()));
+CREATE POLICY "contractor manages own guards" ON public.guards FOR INSERT TO authenticated WITH CHECK (contractor_id IS NOT NULL AND public.is_contractor_member(auth.uid(), contractor_id));
+CREATE POLICY "contractor assigns own slots" ON public.roster_slots FOR UPDATE TO authenticated USING (contractor_id IS NOT NULL AND public.is_contractor_member(auth.uid(), contractor_id)) WITH CHECK (contractor_id IS NOT NULL AND public.is_contractor_member(auth.uid(), contractor_id));

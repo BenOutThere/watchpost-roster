@@ -1,0 +1,12 @@
+# Set this to your own Supabase project ref (the part before .supabase.co), or run `supabase link`.
+project_id = "YOUR-PROJECT-REF"
+
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.send-staff-alerts]
+    verify_jwt = false
+  [functions.sms-dispatch]
+    verify_jwt = false
+  [functions.tallbob-webhook]
+    verify_jwt = false

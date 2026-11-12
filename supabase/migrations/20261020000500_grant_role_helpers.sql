@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role), public.is_admin_role(uuid), public.guard_owns_guard(uuid), public.guard_owns_shift(uuid) TO authenticated;

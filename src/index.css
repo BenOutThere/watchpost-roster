@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 218 36% 8%;
+    --foreground: 210 40% 98%;
+    --card: 219 30% 12%;
+    --card-foreground: 210 40% 98%;
+    --popover: 219 30% 12%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 47 100% 58%;
+    --primary-foreground: 220 43% 8%;
+    --secondary: 218 22% 18%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 218 18% 22%;
+    --muted-foreground: 215 20% 72%;
+    --accent: 47 100% 58%;
+    --accent-foreground: 220 43% 8%;
+    --destructive: 0 86% 62%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 218 18% 24%;
+    --input: 218 18% 24%;
+    --ring: 47 100% 58%;
+    --radius: 0.5rem;
+    --sidebar-background: 220 40% 7%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 47 100% 58%;
+    --sidebar-primary-foreground: 220 43% 8%;
+    --sidebar-accent: 218 22% 18%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 218 18% 22%;
+    --sidebar-ring: 47 100% 58%;
+    --navy: 219 45% 10%;
+    --charcoal: 220 15% 13%;
+    --panel: 219 30% 12%;
+    --panel-elevated: 218 28% 15%;
+    --safety: 47 100% 58%;
+    --success: 145 72% 43%;
+    --warning: 31 100% 56%;
+    --danger: 0 86% 62%;
+    --offline: 215 12% 55%;
+    --info: 200 90% 58%;
+    --map: 219 34% 10%;
+    --shadow-control: 0 18px 40px -20px hsl(var(--safety) / 0.55);
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground antialiased; }
+  button, input, textarea, select { font: inherit; }
+}
+
+@layer components {
+  .panel { @apply rounded-md border border-border bg-card/95 shadow-lg shadow-background/30; }
+  .nav-link { @apply flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-semibold text-muted-foreground transition hover:bg-secondary hover:text-foreground; }
+  .nav-link-active { @apply bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground; }
+  .icon-button { @apply inline-grid h-10 w-10 place-items-center rounded-md border border-border bg-card text-foreground transition hover:border-primary hover:text-primary; }
+  .primary-button { @apply inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2.5 font-bold text-primary-foreground transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-45; }
+  .secondary-button { @apply inline-flex items-center justify-center gap-2 rounded-md border border-border bg-secondary px-4 py-2.5 font-semibold text-foreground transition hover:border-primary hover:text-primary; }
+  .control-input { @apply w-full rounded-md border border-input bg-secondary px-3 py-2.5 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20; }
+  .form-field { @apply rounded-md border border-border bg-card px-3 py-3 text-sm text-foreground; }
+  .metric-icon { @apply inline-grid h-11 w-11 place-items-center rounded-md; }
+  .metric-success { @apply bg-[hsl(var(--success)/0.12)] text-success; }
+  .metric-danger { @apply bg-[hsl(var(--danger)/0.12)] text-danger; }
+  .metric-warning { @apply bg-[hsl(var(--warning)/0.12)] text-warning; }
+  .metric-info { @apply bg-[hsl(var(--info)/0.12)] text-info; }
+  .status-pill { @apply inline-flex w-fit items-center rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-normal; }
+  .status-success { @apply bg-[hsl(var(--success)/0.12)] text-success; }
+  .status-warning { @apply bg-[hsl(var(--warning)/0.12)] text-warning; }
+  .status-danger { @apply bg-[hsl(var(--danger)/0.12)] text-danger; }
+  .status-offline { @apply bg-[hsl(var(--offline)/0.14)] text-offline; }
+  .status-info { @apply bg-[hsl(var(--info)/0.12)] text-info; }
+  .data-table { @apply w-full min-w-[720px] text-left text-sm; }
+  .data-table th { @apply bg-secondary px-4 py-3 text-xs uppercase tracking-[0.14em] text-muted-foreground; }
+  .data-table td { @apply border-t border-border px-4 py-4 align-top; }
+  .data-table small { @apply mt-1 block text-xs text-muted-foreground; }
+  .table-action { @apply rounded-md border border-border px-3 py-1.5 text-xs font-bold text-primary transition hover:bg-primary hover:text-primary-foreground; }
+  .avatar-sm { @apply grid h-9 w-9 shrink-0 place-items-center rounded-md bg-secondary text-xs font-bold; }
+  .guard-marker { @apply absolute z-10 grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-4 border-background text-xs font-bold shadow-lg transition hover:scale-110; }
+  .guard-marker span { @apply grid h-8 w-8 place-items-center rounded-full bg-card text-foreground; }
+  .post-dot { @apply absolute z-[8] flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-md border border-background px-2 py-1 text-[11px] font-bold shadow-lg transition hover:scale-105; }
+  .post-dot span { @apply grid h-5 w-5 place-items-center rounded-full bg-card text-[10px]; }
+  .post-dot b { @apply hidden max-w-28 truncate sm:block; }
+  .post-dot-vacant { @apply bg-danger text-foreground; }
+  .post-dot-occupied { @apply bg-success text-foreground; }
+  .marker-success { @apply bg-success; }
+  .marker-warning { @apply bg-warning; }
+  .marker-danger { @apply bg-danger; }
+  .marker-offline { @apply bg-offline; }
+  .marker-selected { @apply z-20 ring-4 ring-primary/40; }
+  .mobile-step { @apply grid h-8 min-w-8 place-items-center rounded-md bg-secondary text-xs font-bold text-muted-foreground; }
+  .mobile-step-active { @apply bg-primary text-primary-foreground; }
+  .map-grid { background-image: linear-gradient(hsl(var(--border) / 0.34) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border) / 0.34) 1px, transparent 1px); background-size: 42px 42px; mask-image: radial-gradient(circle at center, black, transparent 82%); }
+}
+
+@media print {
+  @page { size: A4 portrait; margin: 0; }
+  body:where(:has(#guard-poster)) * { visibility: hidden !important; }
+  #guard-poster, #guard-poster * { visibility: visible !important; }
+  /* User guides: print only the guide, dark text on white, with page margins. */
+  body:where(:has(#guide-print)) * { visibility: hidden !important; }
+  html:has(#guide-print), body:has(#guide-print) { background: #fff !important; }
+  #guide-print, #guide-print * { visibility: visible !important; color: #111 !important; background: transparent !important; box-shadow: none !important; border-color: #ccc !important; }
+  #guide-print { position: absolute; left: 0; top: 0; width: 100%; padding: 14mm; }
+  #guide-print section, #guide-print header { break-inside: auto; padding: 0 0 8mm 0 !important; border: 0 !important; }
+  #guide-print table, #guide-print ol li, #guide-print h3 { break-inside: avoid; }
+  #guide-print mark { background: transparent !important; }
+  #guard-poster { position: fixed; inset: 0; max-width: none !important; width: 100% !important; height: 100% !important; border-radius: 0 !important; box-shadow: none !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
