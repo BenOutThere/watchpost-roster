@@ -10,3 +10,5 @@ project_id = "YOUR-PROJECT-REF"
     verify_jwt = false
   [functions.tallbob-webhook]
     verify_jwt = false
+  [functions.automation]
+    verify_jwt = false

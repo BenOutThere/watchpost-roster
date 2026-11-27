@@ -62,9 +62,79 @@ function Events() {
         {isManager && <button className="primary-button mt-4 h-11" onClick={save}>Save</button>}
         <div className="mt-3">{flash.node}</div>
       </Panel>
+      {f.id && event?.id === f.id && <FinalActuals />}
       {f.id && event?.id === f.id && can("manage_sms") && <SmsIntegration eventId={f.id} eventName={f.name ?? event.name} />}
       </div>
     </div>
+  );
+}
+
+/** Days between two yyyy-mm-dd dates (b - a). */
+const daysBetween = (a: string, b: string) => Math.round((Date.parse(b + "T00:00:00Z") - Date.parse(a + "T00:00:00Z")) / 86400000);
+
+/**
+ * Final actuals sign-off and rollover. After the event, a Super Admin signs off the final actuals (the roster
+ * as it ended, with approved variations applied). The next edition's Version 1 roster is then rolled from them.
+ * The new-event workflow does the same rollover through the automation edge function.
+ */
+function FinalActuals() {
+  const { event, events, roles, slots, attendance, variations, reload, setEventId } = useOps();
+  const flash = useFlash();
+  const [busy, setBusy] = useState(false);
+  const [name, setName] = useState("");
+  const [date, setDate] = useState("");
+  if (!event) return null;
+  const superAdmin = roles.includes("super_admin");
+  const signedOff = !!event.actuals_signed_off_at;
+  const active = slots.filter((s) => s.event_id === event.id && s.status === "active").length;
+  const stillOn = attendance.filter((a) => a.event_id === event.id && !a.signed_off_at).length;
+  const waiting = variations.filter((v) => v.event_id === event.id && ["requested", "awaiting_ack", "awaiting_approval", "returned"].includes(v.status)).length;
+  const rolledFrom = events.find((e) => e.id === event.rolled_from_event_id);
+  const rolledTo = events.filter((e) => e.rolled_from_event_id === event.id);
+  const shiftDays = event.event_date && date ? daysBetween(event.event_date, date) : null;
+
+  const signOff = async () => {
+    if (!window.confirm(`Sign off the final actuals for "${event.name}"? The next edition's roster will be rolled from them.`)) return;
+    setBusy(true);
+    const { error } = await supabase.rpc("sign_off_event_actuals" as never, { _event_id: event.id } as never);
+    setBusy(false);
+    if (error) return flash.show(errMsg(error), true);
+    flash.show("Final actuals signed off."); await reload();
+  };
+  const rollover = async () => {
+    if (!name.trim() || !date || shiftDays == null) return flash.show("Enter the new event's name and date.", true);
+    setBusy(true);
+    const { data, error } = await supabase.rpc("rollover_event_roster" as never, { _from_event_id: event.id, _name: name.trim(), _event_date: date, _shift_days: shiftDays } as never);
+    setBusy(false);
+    if (error) return flash.show(errMsg(error), true);
+    flash.show(`Rolled over. "${name.trim()}" has its Version 1 roster.`); setName(""); setDate("");
+    await reload(); if (data) setEventId(data as string);
+  };
+
+  return (
+    <Panel title="Final actuals and rollover" description="The next edition's roster is rolled from this event's signed-off final actuals: every active position at its final times, moved to the new dates, with the same provider, role, position, zone and rate. Guards are not carried over.">
+      <div className="space-y-3 text-sm">
+        {rolledFrom && <p>Rolled from <strong>{rolledFrom.name}</strong> final actuals.</p>}
+        {signedOff ? (
+          <p>Final actuals signed off by <strong>{event.actuals_signed_off_name ?? "a Super Admin"}</strong> on {new Date(event.actuals_signed_off_at as string).toLocaleString()}. {active} positions.</p>
+        ) : (
+          <p>Final actuals not signed off yet. {active} positions{stillOn ? `, ${stillOn} guard(s) still signed on` : ""}{waiting ? `, ${waiting} variation(s) waiting for a decision` : ""}.</p>
+        )}
+        {rolledTo.length > 0 && <p>Rolled over to: {rolledTo.map((e) => e.name).join(", ")}.</p>}
+        {superAdmin && !signedOff && <button className="primary-button h-10" disabled={busy || stillOn > 0 || waiting > 0 || active === 0} onClick={signOff}>Sign off final actuals</button>}
+        {superAdmin && signedOff && (
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] sm:items-end">
+            <Field label="Next edition name"><input className="control-input h-10" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Summernats 40" /></Field>
+            <Field label="Next edition date"><input type="date" className="control-input h-10" value={date} onChange={(e) => setDate(e.target.value)} /></Field>
+            <button className="primary-button h-10" disabled={busy} onClick={rollover}>Roll over roster</button>
+            {shiftDays != null && <p className="text-xs text-muted-foreground sm:col-span-3">Shifts move {shiftDays} days.</p>}
+          </div>
+        )}
+        {!superAdmin && <p className="text-xs text-muted-foreground">Only a Super Admin can sign off actuals or roll a roster over.</p>}
+        {!event.event_date && signedOff && superAdmin && <p className="text-xs text-muted-foreground">Set this event's date above first, so the shifts can be moved.</p>}
+      </div>
+      <div className="mt-3">{flash.node}</div>
+    </Panel>
   );
 }
 
