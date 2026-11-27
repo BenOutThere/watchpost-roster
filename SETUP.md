@@ -29,7 +29,7 @@ npm install
 npx supabase login
 npx supabase link --project-ref YOUR-PROJECT-REF
 npx supabase db push            # builds all the tables, rules and scheduled jobs
-npx supabase functions deploy   # uploads the 10 server functions
+npx supabase functions deploy   # uploads the 11 server functions
 ```
 
 ## 3. Supabase: secrets
@@ -49,6 +49,7 @@ select vault.create_secret('YOUR-ANON-OR-PUBLISHABLE-KEY', 'anon_key');
 | `RESEND_API_KEY` | From Resend → API Keys |
 | `SMS_CREDENTIALS_KEY` | A long random secret that locks the saved Tall Bob logins. Generate one with `openssl rand -base64 32` (Claude can make one for you). **Keep it safe: if it changes, Tall Bob details must be re-entered.** |
 | `SEND_EMAIL_HOOK_SECRET` | Shown in step 5 |
+| `AUTOMATION_API_TOKEN` | Optional. A long random secret (`openssl rand -hex 32`) that lets the OTG new-event workflow read final actuals and roll rosters over through the `automation` function. Without it that function refuses every call. |
 | `EMAIL_FROM` | Optional. Defaults to `OTG Security Management <noreply@security.outthereadmin.com.au>` |
 
 ## 4. Resend: email

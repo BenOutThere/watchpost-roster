@@ -701,6 +701,23 @@ export const adminGuide: Guide = {
           ],
         },
         {
+          id: "event-actuals",
+          title: "10.1a Final actuals and rolling the roster to the next edition",
+          blocks: [
+            { t: "note", tone: "new", text: "New. Super Admins only." },
+            { t: "p", text: "After an event, sign off its final actuals: the roster as it ended, with every approved variation applied. The next edition's roster is rolled from these, so it starts from what was actually needed rather than the first plan." },
+            {
+              t: "steps",
+              items: [
+                "Pick the finished event on the left. Under **Final actuals and rollover**, check everyone is signed off and no variation is waiting.",
+                "Click **Sign off final actuals**.",
+                "Enter the **Next edition name** and **Next edition date**, then click **Roll over roster**. Every active position moves to the new dates with the same provider, role, position, zone and rate. Guards are not carried over.",
+              ],
+            },
+            { t: "note", tone: "important", text: "The new event gets the rolled roster as its Original Roster – Version 1. The finished event is never changed. The OTG new-event workflow can do the rollover automatically, but only after actuals are signed off here." },
+          ],
+        },
+        {
           id: "event-sms",
           title: "10.2 SMS integration (Tall Bob) for an event",
           blocks: [

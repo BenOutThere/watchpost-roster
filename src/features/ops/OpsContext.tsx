@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Attendance, Slot, SlotCost, VariationCost } from "@/lib/roster";
 import { SECURITY_USER_TYPES, canApproveVariations, hasPermission, type Permission } from "@/lib/roster";
 
-export type EventRow = { id: string; name: string; venue: string; timezone: string; event_date: string | null; gps_required: boolean; venue_lat: number | null; venue_lng: number | null; venue_radius_m: number; status: string };
+export type EventRow = { id: string; name: string; venue: string; timezone: string; event_date: string | null; gps_required: boolean; venue_lat: number | null; venue_lng: number | null; venue_radius_m: number; status: string; actuals_signed_off_at?: string | null; actuals_signed_off_name?: string | null; rolled_from_event_id?: string | null };
 export type Contractor = { id: string; name: string; contact_name: string | null; phone: string | null; email: string | null };
 export type Guard = { id: string; name: string; phone: string; email: string; employee_id: string; licence_number: string; contractor_id: string | null; status: string; user_id: string };
 export type Variation = {
